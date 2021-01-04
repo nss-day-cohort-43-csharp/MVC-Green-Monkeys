@@ -67,11 +67,12 @@ namespace TabloidMVC.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        SELETE Id, Name
+                        SELECT Id, [Name]
                         FROM Tag
-                        WHERE Id = @id";
-                    cmd.Parameters.AddWithValue("@id", id);
-                   SqlDataReader reader = cmd.ExecuteReader();
+                        WHERE Id = @id
+                        ";
+                   cmd.Parameters.AddWithValue("@id", id);
+                  var reader = cmd.ExecuteReader();
 
                     if(reader.Read())
                     {
