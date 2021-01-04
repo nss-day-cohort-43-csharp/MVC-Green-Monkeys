@@ -78,16 +78,18 @@ namespace TabloidMVC.Controllers
         // GET: TagController/Delete/5
         public ActionResult Delete(int id)
         {
+            Tag tag = _tagRepository.GetTagById(id);
             return View();
         }
 
         // POST: TagController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Tag tag)
         {
             try
             {
+                _tagRepository.RemoveTag(id);
                 return RedirectToAction(nameof(Index));
             }
             catch
