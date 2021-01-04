@@ -88,7 +88,7 @@ namespace TabloidMVC.Controllers
             }
             return View(post);
         }
-        // POST: DogsController/Edit/5
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, Post post)
