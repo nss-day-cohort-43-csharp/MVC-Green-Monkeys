@@ -1,4 +1,4 @@
-USE [TabloidMVC]
+﻿USE [TabloidMVC]
 GO
 
 SET IDENTITY_INSERT [UserType] ON
@@ -22,7 +22,8 @@ SET IDENTITY_INSERT [Tag] OFF
 SET IDENTITY_INSERT [UserProfile] ON
 INSERT INTO [UserProfile] (
 	[Id], [FirstName], [LastName], [DisplayName], [Email], [CreateDateTime], [ImageLocation], [UserTypeId])
-VALUES (1, 'Admina', 'Strator', 'admin', 'admin@example.com', SYSDATETIME(), NULL, 1);
+VALUES (1, 'Admina', 'Strator', 'admin', 'admin@example.com', SYSDATETIME(), NULL, 1),
+		(2, 'Lacey', 'Walker', 'author', 'lacey@gmail.com', SYSDATETIME(), NULL, 2);
 SET IDENTITY_INSERT [UserProfile] OFF
 
 SET IDENTITY_INSERT [Post] ON

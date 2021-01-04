@@ -1,4 +1,4 @@
-USE [master]
+﻿USE [master]
 
 IF db_id('TabloidMVC') IS NULl
   CREATE DATABASE [TabloidMVC]
