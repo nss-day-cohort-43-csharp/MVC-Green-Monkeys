@@ -161,28 +161,39 @@ namespace TabloidMVC.Repositories
             }
         }
 
-        //public void Update(Post post)
-        //{
-        //    using (SqlConnection conn = Connection)
-        //    {
-        //        conn.Open();
-        //        using (SqlCommand cmd = conn.CreateCommand())
-        //        {
-        //            cmd.CommandText = @"Update Post
-        //                              SET
-        //                              Title  =@title,
-        //                              Content = @content,
-        //                              ImageLocation = @imageLocation,
-        //                              CreateDateTime = @createDateTime,
-        //                              PublishDateTime = @publishDateTime,
-        //                              IsApproved = @isApprove,
-        //                              CategoryId = @categoryId,
-        //                              UserProfileId = @userProfileId
-        //                              WHERE id = @id";
-        //            cmd.Parameters.AddWithValue(@id)
-        //        }
-        //    }
-        //}
+        public void update(Post post)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+
+                {
+                    cmd.CommandText = @"update post
+                                      set
+                                      title  = @title
+                                      content = @content,
+                                      imageLocation = @imageLocation,
+                                      createDateTime = @createDateTime,
+                                      publishDateTime = @publishDateTime,
+                                      isApproved = @isApprove,
+                                      categoryId = @categorId,
+                                      userProfileId = @userProfileId
+                                      where id = @id";
+                    cmd.Parameters.AddWithValue("@id", post.Id);
+                    cmd.Parameters.AddWithValue("@title", post.Title);
+                    cmd.Parameters.AddWithValue("@imageLocation", DbUtils.ValueOrDBNull(post.ImageLocation));
+                    cmd.Parameters.AddWithValue("@creteDateTime", post.CreateDateTime);
+                    cmd.Parameters.AddWithValue("@pushlishDateTime", DbUtils.ValueOrDBNull(post.PublishDateTime));
+                    cmd.Parameters.AddWithValue("@isApproved", post.IsApproved);
+                    cmd.Parameters.AddWithValue("@categoryId", post.CategoryId);
+                    cmd.Parameters.AddWithValue("@userProfileId", post.UserProfileId);
+
+                    cmd.ExecuteNonQuery();
+
+                }
+            }
+        }
 
         private Post NewPostFromReader(SqlDataReader reader)
         {

@@ -6,6 +6,7 @@ using System.Security.Claims;
 using TabloidMVC.Models.ViewModels;
 using TabloidMVC.Repositories;
 using System;
+using TabloidMVC.Models;
 
 namespace TabloidMVC.Controllers
 {
@@ -75,6 +76,37 @@ namespace TabloidMVC.Controllers
                 return View(vm);
             }
         }
+
+
+        public ActionResult Edit(int id)
+        {
+            Post post = _postRepository.GetPublishedPostById(id);
+
+            if (post == null)
+            {
+                return NotFound();
+            }
+            return View(post);
+        }
+        // POST: DogsController/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(int id, Post post)
+        {
+            try
+            {
+                int userId = GetCurrentUserProfileId();
+                _postRepository.update(post);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+
+                return View(post);
+            }
+        }
+
+
 
         private int GetCurrentUserProfileId()
         {
