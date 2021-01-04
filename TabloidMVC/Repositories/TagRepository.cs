@@ -10,6 +10,8 @@ namespace TabloidMVC.Repositories
     {
 
         public TagRepository(IConfiguration config) : base(config) { }
+       
+    //Get all of the tags
         public List<Tag> GetAllTags()
         {
             using (var conn = Connection)
@@ -35,6 +37,23 @@ namespace TabloidMVC.Repositories
                     reader.Close();
                         return tags;
 
+                }
+            }
+        }
+    //Add a new tag
+        public void AddTag(Tag tag)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        INSERT INTO Tag (Name)
+                        VALUES(@Name);";
+                    cmd.Parameters.AddWithValue("@Name", tag.Name);
+
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
