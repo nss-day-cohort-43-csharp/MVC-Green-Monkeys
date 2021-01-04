@@ -3,6 +3,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using TabloidMVC.Models;
 
+
 namespace TabloidMVC.Repositories
 {
     public class CategoryRepository : BaseRepository, ICategoryRepository
@@ -40,31 +41,36 @@ namespace TabloidMVC.Repositories
 
         public Category GetCategoryById(int id)
         {
-            using (SqlCommand cmd = conn.CreateCommand())
+            using (SqlConnection conn = Connection)
             {
-                cmd.CommandText = @"
-                SELECT Id, [Name]
-                FROM Category";
-
-                cmd.Parameters.AddWithValue("@id", id);
-
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                if (reader.Read())
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    Category category = new Category
+                    cmd.CommandText = @"
+                    SELECT Id, [Name]
+                    FROM Category
+                    WHERE Id = @id";
+
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
                     {
-                        Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                        Name = reader.GetString(reader.GetOrdinal("Name"))
-                    };
+                        Category category = new Category
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Name = reader.GetString(reader.GetOrdinal("Name"))
+                        };
 
-                    reader.Close();
-                    return category;
-                }
-                else
-                {
-                    reader.Close();
-                    return null;
+                        reader.Close();
+                        return category;
+                    }
+                    else
+                    {
+                        reader.Close();
+                        return null;
+                    }
                 }
 
             }
