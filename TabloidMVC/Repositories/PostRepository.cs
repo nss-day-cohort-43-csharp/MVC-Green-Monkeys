@@ -91,7 +91,7 @@ namespace TabloidMVC.Repositories
             }
         }
 
-        public Post GetUserPostById(int id, int userProfileId)
+        public Post GetUserPostById(int userProfileId)
         {
             using (var conn = Connection)
             {
@@ -112,9 +112,8 @@ namespace TabloidMVC.Repositories
                               LEFT JOIN Category c ON p.CategoryId = c.id
                               LEFT JOIN UserProfile u ON p.UserProfileId = u.id
                               LEFT JOIN UserType ut ON u.UserTypeId = ut.id
-                        WHERE p.id = @id AND p.UserProfileId = @userProfileId";
+                        WHERE  p.UserProfileId = @userProfileId";
 
-                    cmd.Parameters.AddWithValue("@id", id);
                     cmd.Parameters.AddWithValue("@userProfileId", userProfileId);
                     var reader = cmd.ExecuteReader();
 
@@ -162,6 +161,29 @@ namespace TabloidMVC.Repositories
             }
         }
 
+        //public void Update(Post post)
+        //{
+        //    using (SqlConnection conn = Connection)
+        //    {
+        //        conn.Open();
+        //        using (SqlCommand cmd = conn.CreateCommand())
+        //        {
+        //            cmd.CommandText = @"Update Post
+        //                              SET
+        //                              Title  =@title,
+        //                              Content = @content,
+        //                              ImageLocation = @imageLocation,
+        //                              CreateDateTime = @createDateTime,
+        //                              PublishDateTime = @publishDateTime,
+        //                              IsApproved = @isApprove,
+        //                              CategoryId = @categoryId,
+        //                              UserProfileId = @userProfileId
+        //                              WHERE id = @id";
+        //            cmd.Parameters.AddWithValue(@id)
+        //        }
+        //    }
+        //}
+
         private Post NewPostFromReader(SqlDataReader reader)
         {
             return new Post()
@@ -197,5 +219,7 @@ namespace TabloidMVC.Repositories
                 }
             };
         }
+
+   
     }
 }

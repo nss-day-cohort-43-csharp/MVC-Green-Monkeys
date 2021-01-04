@@ -5,6 +5,7 @@ using Microsoft.VisualBasic;
 using System.Security.Claims;
 using TabloidMVC.Models.ViewModels;
 using TabloidMVC.Repositories;
+using System;
 
 namespace TabloidMVC.Controllers
 {
@@ -26,13 +27,20 @@ namespace TabloidMVC.Controllers
             return View(posts);
         }
 
+        public IActionResult MyPosts()
+        {
+            int userId = GetCurrentUserProfileId();
+            var post = _postRepository.GetUserPostById(userId);
+            return View(post);
+        }
+
         public IActionResult Details(int id)
         {
             var post = _postRepository.GetPublishedPostById(id);
             if (post == null)
             {
-                int userId = GetCurrentUserProfileId();
-                post = _postRepository.GetUserPostById(id, userId);
+          
+                post = _postRepository.GetPublishedPostById(id);
                 if (post == null)
                 {
                     return NotFound();
