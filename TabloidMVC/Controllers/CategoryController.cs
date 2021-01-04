@@ -44,9 +44,9 @@ namespace TabloidMVC.Controllers
             try
             {
                 _categoryRepo.AddCategory(category);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index");
             }
-            catch
+            catch(Exception ex)
             {
                 return View(category);
             }

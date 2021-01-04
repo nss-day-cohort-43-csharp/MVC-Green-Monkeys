@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using TabloidMVC.Models;
 
@@ -35,24 +36,25 @@ namespace TabloidMVC.Repositories
             }
         }
 
+        // add a new category
         public void AddCategory(Category category)
         {
-            using (var conn = Connection)
+            using (SqlConnection conn = Connection)
             {
                 conn.Open();
-                using (var cmd = conn.CreateCommand())
+                using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        INSERT INTO Category (Id, [Name]) 
-
+                        INSERT INTO Category ([Name]) 
                         OUTPUT INSERTED.ID
-                        VALUES(@id, @name)";
-                    cmd.Parameters.AddWithValue("@id", category.Id);
+                        VALUES ( @name);
+                        ";
+
                     cmd.Parameters.AddWithValue("@name", category.Name);
 
-                    category.Id = (int)cmd.ExecuteScalar();
+                    int id = (int)cmd.ExecuteScalar();
+                    category.Id = id;
 
-                    //category.Id = id;
                 }
             }
         }
