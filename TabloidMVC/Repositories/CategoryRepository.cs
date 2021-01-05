@@ -53,8 +53,8 @@ namespace TabloidMVC.Repositories
                     cmd.CommandText = @"
                     SELECT Id, [Name]
                     FROM Category
-                    WHERE Id = @id
-AND WHERE Active = 1";
+                    WHERE Id = @id 
+                    AND Active = 1";
 
                     cmd.Parameters.AddWithValue("@id", id);
 
