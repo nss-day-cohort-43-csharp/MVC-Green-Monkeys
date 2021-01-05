@@ -57,21 +57,29 @@ namespace TabloidMVC.Controllers
         // GET: TagController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            Tag tag = _tagRepository.GetTagById(id);
+                if (tag == null)
+            {
+                return NotFound();
+            }
+            else {
+                return View(tag);
+            }
         }
 
         // POST: TagController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Tag tag)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                _tagRepository.UpdateTag(tag);
+                return RedirectToAction("Index");
             }
             catch
             {
-                return View();
+                return View(tag);
             }
         }
 
