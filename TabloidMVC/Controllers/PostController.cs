@@ -7,6 +7,7 @@ using TabloidMVC.Models.ViewModels;
 using TabloidMVC.Repositories;
 using System;
 using TabloidMVC.Models;
+using System.Collections.Generic;
 
 namespace TabloidMVC.Controllers
 {
@@ -31,8 +32,9 @@ namespace TabloidMVC.Controllers
         public IActionResult MyPosts()
         {
             int userId = GetCurrentUserProfileId();
-            var post = _postRepository.GetUserPostById(userId);
-            return View(post);
+            var posts = _postRepository.GetUserPostById(userId);
+         
+            return View(posts);
         }
 
         public IActionResult Details(int id)
@@ -78,15 +80,13 @@ namespace TabloidMVC.Controllers
         }
 
 
-        public ActionResult Edit(int id)
+        public ActionResult Edit( int id)
         {
-            Post post = _postRepository.GetPublishedPostById(id);
 
-            if (post == null)
-            {
-                return NotFound();
-            }
-            return View(post);
+            var vm = new PostEditViewModel();
+            Post post = _postRepository.GetPublishedPostById(id);
+            vm.CategoryOptions = _categoryRepository.GetAll();
+            return View(vm);
         }
 
         [HttpPost]
