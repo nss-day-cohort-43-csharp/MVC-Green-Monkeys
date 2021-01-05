@@ -146,7 +146,27 @@ namespace TabloidMVC.Controllers
             }
         }
 
+        public ActionResult Delete(int id)
+        {
+            Post post = _postRepository.GetPublishedPostById(id);
+            return View(post);
+        }
 
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int id, Post post)
+        {
+            try
+            {
+                _postRepository.Delete(id);
+                return RedirectToAction(nameof(MyPosts));
+            }
+            catch
+            {
+                return View();
+            }
+        }
 
         private int GetCurrentUserProfileId()
         {
