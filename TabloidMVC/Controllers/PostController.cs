@@ -34,23 +34,32 @@ namespace TabloidMVC.Controllers
         {
             int userId = GetCurrentUserProfileId();
             var posts = _postRepository.GetUserPostById(userId);
-         
+
             return View(posts);
         }
 
         public IActionResult Details(int id)
         {
+            int userId = GetCurrentUserProfileId();
             var post = _postRepository.GetPublishedPostById(id);
             if (post == null)
             {
-          
-                post = _postRepository.GetPublishedPostById(id);
-                if (post == null)
-                {
-                    return NotFound();
-                }
+                return NotFound();
             }
-            return View(post);
+            if (userId == post.UserProfileId)
+            {
+                return View(post);
+            }
+
+            if (post.IsApproved == true || post.PublishDateTime <= DateTime.Now)
+            {
+                return View(post);
+            }
+            else
+            {
+                return NotFound();
+            }
+
         }
 
         public IActionResult Create()
@@ -72,7 +81,7 @@ namespace TabloidMVC.Controllers
                 _postRepository.Add(vm.Post);
 
                 return RedirectToAction("Details", new { id = vm.Post.Id });
-            } 
+            }
             catch
             {
                 vm.CategoryOptions = _categoryRepository.GetAll();
@@ -81,7 +90,7 @@ namespace TabloidMVC.Controllers
         }
 
 
-        public ActionResult Edit( int id)
+        public ActionResult Edit(int id)
         {
             //making a new post
             var post = new Post();
@@ -101,7 +110,7 @@ namespace TabloidMVC.Controllers
             };
             //if post is null or if the user profile dosen't match then you can't edit
             if (post == null || post.UserProfileId != int.Parse(User.Claims.ElementAt(0).Value))
-                {
+            {
                 return NotFound();
             }
             else
