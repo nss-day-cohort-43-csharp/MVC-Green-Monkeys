@@ -9,6 +9,8 @@ namespace TabloidMVC.Repositories
     public class CategoryRepository : BaseRepository, ICategoryRepository
     {
         public CategoryRepository(IConfiguration config) : base(config) { }
+
+        // List Category
         public List<Category> GetAll()
         {
             using (var conn = Connection)
@@ -37,7 +39,7 @@ namespace TabloidMVC.Repositories
             }
         }
 
-        // Get category by Id
+        // Get Category by Id
 
         public Category GetCategoryById(int id)
         {
@@ -76,7 +78,7 @@ namespace TabloidMVC.Repositories
             }
         }
 
-        // add a new category
+        // Add a new Category
         public void AddCategory(Category category)
         {
             using (SqlConnection conn = Connection)
@@ -99,6 +101,8 @@ namespace TabloidMVC.Repositories
             }
         }
 
+        // Edit Category
+
         public void UpdateCategory(Category category)
         {
             using (SqlConnection conn = Connection)
@@ -118,7 +122,7 @@ namespace TabloidMVC.Repositories
             }
         }
 
-        //delete
+        // Delete Category
 
         public void DeleteCategory(int categoryId)
         {
