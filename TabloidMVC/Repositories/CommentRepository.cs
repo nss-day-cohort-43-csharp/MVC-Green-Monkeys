@@ -9,24 +9,9 @@ using TabloidMVC.Repositories.Utils;
 
 namespace TabloidMVC.Repositories
 {
-    public class CommentRepository : ICommentRepository
-    {
-        private readonly IConfiguration _config;
-
-        // The constructor accepts an IConfiguration object as a parameter. This class comes from the ASP.NET framework and is useful for retrieving things out of the appsettings.json file like connection strings.
-        public CommentRepository(IConfiguration config) 
-        {
-            _config = config;
-        }
-
-        public SqlConnection Connection
-        {
-            get
-            {
-                return new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            }
-        }
-
+    public class CommentRepository : BaseRepository, ICommentRepository
+    {      
+        public CommentRepository(IConfiguration config) : base(config) { }
         public List<Comment> GetCommentByPostId(int id)
         {
             using (SqlConnection conn = Connection)
@@ -89,7 +74,7 @@ namespace TabloidMVC.Repositories
                                 }
                             }
                         };
-        
+
 
                         comments.Add(comment);
                     }
@@ -100,6 +85,31 @@ namespace TabloidMVC.Repositories
                 }
             }
         }
+            public void AddComment(Comment comment)
+            {
+                using (SqlConnection conn = Connection)
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = @"
+                    INSERT INTO Comment (PostId, UserProfileId, Subject, Content, CreateDateTime)
+                    OUTPUT INSERTED.ID
+                    VALUES (@postId, @userProfileId, @subject, @content, @createDateTime);
+                ";
 
+                        cmd.Parameters.AddWithValue("@postId", comment.PostId);
+                        cmd.Parameters.AddWithValue("@userProfileId", comment.UserProfileId);
+                        cmd.Parameters.AddWithValue("@subject", comment.Subject);
+
+                        cmd.Parameters.AddWithValue("@content", comment.Content);
+                        cmd.Parameters.AddWithValue("@createDateTime", comment.CreateDataTime);
+
+                        comment.Id = (int)cmd.ExecuteScalar();
+                        
+                    }
+                }
+            }
     }
 }
+
