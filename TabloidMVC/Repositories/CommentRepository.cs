@@ -9,12 +9,12 @@ using TabloidMVC.Repositories.Utils;
 
 namespace TabloidMVC.Repositories
 {
-    public class CommentRepository
+    public class CommentRepository : ICommentRepository
     {
         private readonly IConfiguration _config;
 
         // The constructor accepts an IConfiguration object as a parameter. This class comes from the ASP.NET framework and is useful for retrieving things out of the appsettings.json file like connection strings.
-        public CommentRepository(IConfiguration config)
+        public CommentRepository(IConfiguration config) 
         {
             _config = config;
         }
