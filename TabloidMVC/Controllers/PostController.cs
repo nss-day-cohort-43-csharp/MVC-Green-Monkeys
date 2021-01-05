@@ -8,6 +8,7 @@ using TabloidMVC.Repositories;
 using System;
 using TabloidMVC.Models;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TabloidMVC.Controllers
 {
@@ -82,11 +83,33 @@ namespace TabloidMVC.Controllers
 
         public ActionResult Edit( int id)
         {
+            //making a new post
+            var post = new Post();
+            //getting current user
+            int userId = GetCurrentUserProfileId();
+            //getting the post  by user
+            post = _postRepository.GetUserPostById(id, userId);
+            //list of categories
+            var categories = _categoryRepository.GetAll();
+            //reusing the post create view model
+            PostCreateViewModel vm = new PostCreateViewModel
+            {
+                //this is popluating the form 
+                Post = post,
+                //populating the categories
+                CategoryOptions = categories
+            };
+            //if post is null or if the user profile dosen't match then you can edit
+            if (post == null || post.UserProfileId != int.Parse(User.Claims.ElementAt(0).Value))
+                {
+                return NotFound();
+            }
+            else
+            {
+                //otherwise it will return the view model
+                return View(vm);
+            }
 
-            var vm = new PostEditViewModel();
-            Post post = _postRepository.GetPublishedPostById(id);
-            vm.CategoryOptions = _categoryRepository.GetAll();
-            return View(vm);
         }
 
         [HttpPost]
@@ -102,7 +125,14 @@ namespace TabloidMVC.Controllers
             catch (Exception ex)
             {
 
-                return View(post);
+                var postToEdit = _postRepository.GetPublishedPostById(id);
+                var categories = _categoryRepository.GetAll();
+                PostCreateViewModel vm = new PostCreateViewModel
+                {
+                    Post = postToEdit,
+                    CategoryOptions = categories
+                };
+                return View(vm);
             }
         }
 
