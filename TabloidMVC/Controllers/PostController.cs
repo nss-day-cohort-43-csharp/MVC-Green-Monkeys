@@ -17,11 +17,14 @@ namespace TabloidMVC.Controllers
     {
         private readonly IPostRepository _postRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly ITagRepository _tagRepository;
 
-        public PostController(IPostRepository postRepository, ICategoryRepository categoryRepository)
+        public PostController(IPostRepository postRepository, ICategoryRepository categoryRepository, ITagRepository tagRepository)
         {
             _postRepository = postRepository;
             _categoryRepository = categoryRepository;
+            _tagRepository = tagRepository;
+            
         }
 
         public IActionResult Index()
@@ -34,7 +37,7 @@ namespace TabloidMVC.Controllers
         {
             int userId = GetCurrentUserProfileId();
             var posts = _postRepository.GetUserPostById(userId);
-         
+
             return View(posts);
         }
 
@@ -43,7 +46,7 @@ namespace TabloidMVC.Controllers
             var post = _postRepository.GetPublishedPostById(id);
             if (post == null)
             {
-          
+
                 post = _postRepository.GetPublishedPostById(id);
                 if (post == null)
                 {
@@ -72,7 +75,7 @@ namespace TabloidMVC.Controllers
                 _postRepository.Add(vm.Post);
 
                 return RedirectToAction("Details", new { id = vm.Post.Id });
-            } 
+            }
             catch
             {
                 vm.CategoryOptions = _categoryRepository.GetAll();
@@ -81,7 +84,7 @@ namespace TabloidMVC.Controllers
         }
 
 
-        public ActionResult Edit( int id)
+        public ActionResult Edit(int id)
         {
             //making a new post
             var post = new Post();
@@ -101,7 +104,7 @@ namespace TabloidMVC.Controllers
             };
             //if post is null or if the user profile dosen't match then you can edit
             if (post == null || post.UserProfileId != int.Parse(User.Claims.ElementAt(0).Value))
-                {
+            {
                 return NotFound();
             }
             else
@@ -142,6 +145,35 @@ namespace TabloidMVC.Controllers
         {
             string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return int.Parse(id);
+        }
+
+
+        //Tag Management for the deatils of posts
+
+        //GET
+        public IActionResult TagManagement(int id)
+        {
+            var vm = new PostTagViewModel();
+            vm.TagOptions = _tagRepository.GetAllTags();
+            vm.Post = _postRepository.GetUserPostById(id, GetCurrentUserProfileId());
+
+            //if (userId != post.UserProfileId)
+            
+                return View(vm);                  
+        }
+
+        //POST
+        [HttpPost]
+        public IActionResult TagManagement(int id, Tag tag)
+        {
+            var postTag = new PostTag()
+            {
+                PostId = id,
+                TagId = tag.Id
+            };
+            _postRepository.AddPostTag(postTag);
+            return RedirectToAction("Index");
+            
         }
     }
 }
