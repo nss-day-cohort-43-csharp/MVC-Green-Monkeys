@@ -64,7 +64,7 @@
                         <tr>
                             <td>
                                 @Html.DisplayFor(modelItem => postTag.Tag.Name)
-                                <a asp-controller="PostTag" asp-action="DeleteTag" asp-route-id="@Model.Id" class="btn btn-outline-primary mx-1" title="Manage Tags">
+                                <a asp-controller="Post" asp-action="DeleteTag" asp-route-id="@Model.Id" class="btn btn-outline-primary mx-1" title="Manage Tags">
                                     <i class="fas fa-ban"></i>
                                 </a>
                             </td>
