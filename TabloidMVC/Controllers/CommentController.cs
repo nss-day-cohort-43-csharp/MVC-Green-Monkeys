@@ -30,14 +30,14 @@ namespace TabloidMVC.Controllers
 
         // GET: CommentController/Details/5
         public ActionResult Details(int id)
-        {       
+        {
             return View();
         }
 
         // GET: CommentController/Create
         public ActionResult Create(int id)
         {
-           
+
             Post post = _postRepo.GetPublishedPostById(id);
             CommentCreateViewModel vm = new CommentCreateViewModel()
             {
@@ -72,7 +72,7 @@ namespace TabloidMVC.Controllers
         public ActionResult Edit(int id)
         {
             Comment comment = _commentRepo.GetCommentById(id);
-            if(comment == null)
+            if (comment == null)
             {
                 return NotFound();
             }
@@ -87,9 +87,9 @@ namespace TabloidMVC.Controllers
             try
             {
                 _commentRepo.UpdateComment(comment, id);
-                return RedirectToAction(nameof(Index), new { id = comment.PostId});
+                return RedirectToAction(nameof(Index), new { id = comment.PostId });
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return View(comment);
             }
@@ -99,7 +99,7 @@ namespace TabloidMVC.Controllers
         public ActionResult Delete(int id)
         {
             Comment comment = _commentRepo.GetCommentById(id);
-            if(comment == null)
+            if (comment == null)
             {
                 return NotFound();
             }
@@ -112,7 +112,7 @@ namespace TabloidMVC.Controllers
         public ActionResult Delete(int id, Comment comment)
         {
             try
-            {   
+            {
                 _commentRepo.DeleteComment(id, comment);
                 return RedirectToAction(nameof(Index));
             }
