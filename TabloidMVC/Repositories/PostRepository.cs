@@ -112,9 +112,10 @@ namespace TabloidMVC.Repositories
                               LEFT JOIN Category c ON p.CategoryId = c.id
                               LEFT JOIN UserProfile u ON p.UserProfileId = u.id
                               LEFT JOIN UserType ut ON u.UserTypeId = ut.id
-                        WHERE  p.UserProfileId = @userProfileId";
+                        WHERE  p.UserProfileId = @userProfileId AND p.Id =@id" ;
 
                     cmd.Parameters.AddWithValue("@userProfileId", userProfileId);
+                    cmd.Parameters.AddWithValue("@Id", id);
                     var reader = cmd.ExecuteReader();
 
                     Post post = null;
@@ -269,5 +270,38 @@ namespace TabloidMVC.Repositories
                 }
             }
         }
+        public void AddPostTag(PostTag postTag)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        INSERT INTO PostTag
+                            (PostId, TagId)
+                        VALUES (@postId, @tagId)";
+                    cmd.Parameters.AddWithValue("@postId", postTag.PostId);
+                    cmd.Parameters.AddWithValue("@tagId", postTag.TagId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        public void RemovePostTag(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        DELETE FROM PostTag
+                        WHERE Id = @id";
+                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+       
     }
 }
