@@ -26,13 +26,6 @@
                     <i class="fas fa-tags"></i>
                 </a>
             </div>
-            <div class="row mt-2">
-                @foreach (Tag tag in Model.Tags)
-                {
-                    <span class="badge badge-primary">@tag.Name</span>
-                }
-
-            </div>
         </section>
         <hr />
         @if (!string.IsNullOrWhiteSpace(Model.ImageLocation))

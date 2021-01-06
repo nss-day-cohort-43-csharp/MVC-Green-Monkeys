@@ -164,11 +164,11 @@ namespace TabloidMVC.Controllers
 
         //POST
         [HttpPost]
-        public IActionResult TagManagement(int id, Tag tag)
+        public IActionResult TagManagement(Post post, Tag tag)
         {
             var postTag = new PostTag()
             {
-                PostId = id,
+                PostId = post.Id,
                 TagId = tag.Id
             };
             _postRepository.AddPostTag(postTag);
