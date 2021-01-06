@@ -183,7 +183,7 @@ namespace TabloidMVC.Repositories
                 }
             }
         }
-        public void UpdateComment(Comment comment)
+        public void UpdateComment(Comment comment, int id)
         {
             using (SqlConnection conn = Connection)
             {
@@ -195,7 +195,7 @@ namespace TabloidMVC.Repositories
                             UPDATE Comment
                             SET 
                                 Subject = @subject, 
-                                Content = @content, 
+                                Content = @content 
                             WHERE Id = @id";
 
                     cmd.Parameters.AddWithValue("@subject", comment.Subject);
