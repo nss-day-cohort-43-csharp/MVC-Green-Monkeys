@@ -1,2 +1,2 @@
-﻿Update Category 
+﻿Update Post
 Set active = 1;
