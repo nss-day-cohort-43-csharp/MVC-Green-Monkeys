@@ -25,14 +25,7 @@ namespace TabloidMVC.Controllers
         public ActionResult Index(int id)
         {
             List<Comment> comments = _commentRepo.GetCommentByPostId(id);
-            Post post = _postRepo.GetPublishedPostById(id);
-            CommentCreateViewModel vm = new CommentCreateViewModel
-            {
-                Comments = comments,
-                Post = post
-            };
-
-            return View(vm);
+            return View(comments);
         }
 
         // GET: CommentController/Details/5
@@ -44,15 +37,16 @@ namespace TabloidMVC.Controllers
         // GET: CommentController/Create
         public ActionResult Create(int id)
         {
-            var currentUser = GetCurrentUserId();
-            List<Comment> comments = _commentRepo.GetCommentByPostId(id);
+           
             Post post = _postRepo.GetPublishedPostById(id);
-
-            CommentCreateViewModel vm = new CommentCreateViewModel
+            CommentCreateViewModel vm = new CommentCreateViewModel()
             {
-                UserId = currentUser,
-                Comments = comments,
-                Post = post
+                Post = post,
+                Comment = new Comment()
+                {
+                    PostId = post.Id,
+                    UserProfileId = GetCurrentUserId()
+                }
             };
             return View(vm);
         }
