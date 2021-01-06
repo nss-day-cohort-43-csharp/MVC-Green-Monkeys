@@ -17,11 +17,14 @@ namespace TabloidMVC.Controllers
     {
         private readonly IPostRepository _postRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly ITagRepository _tagRepository;
 
-        public PostController(IPostRepository postRepository, ICategoryRepository categoryRepository)
+        public PostController(IPostRepository postRepository, ICategoryRepository categoryRepository, ITagRepository tagRepository)
         {
             _postRepository = postRepository;
             _categoryRepository = categoryRepository;
+            _tagRepository = tagRepository;
+            
         }
 
         public IActionResult Index()
@@ -44,6 +47,12 @@ namespace TabloidMVC.Controllers
             var post = _postRepository.GetPublishedPostById(id);
             if (post == null)
             {
+
+                post = _postRepository.GetPublishedPostById(id);
+                if (post == null)
+                {
+                    return NotFound();
+                }
                 return NotFound();
             }
             if (userId == post.UserProfileId)
@@ -172,6 +181,38 @@ namespace TabloidMVC.Controllers
         {
             string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return int.Parse(id);
+        }
+
+
+        //Tag Management for the deatils of posts
+
+        //GET
+        public IActionResult TagManagement(int id)
+        {
+            var vm = new PostTagViewModel();
+            vm.TagOptions = _tagRepository.GetAllTags();
+            vm.Post = _postRepository.GetUserPostById(id, GetCurrentUserProfileId());
+
+            if (vm.Post == null || vm.Post.UserProfileId != GetCurrentUserProfileId())
+            {
+                return NotFound();
+            }
+            
+             return View(vm);                  
+        }
+
+        //POST
+        [HttpPost]
+        public IActionResult TagManagement(PostTagViewModel vm)
+        {
+            var postTag = new PostTag()
+            {
+                PostId = vm.Post.Id,
+                TagId = vm.SelectedTagId
+            };
+            _postRepository.AddPostTag(postTag);
+            return RedirectToAction("Index");
+            
         }
     }
 }
