@@ -112,9 +112,10 @@ namespace TabloidMVC.Repositories
                               LEFT JOIN Category c ON p.CategoryId = c.id
                               LEFT JOIN UserProfile u ON p.UserProfileId = u.id
                               LEFT JOIN UserType ut ON u.UserTypeId = ut.id
-                        WHERE  p.UserProfileId = @userProfileId";
+                        WHERE  p.UserProfileId = @userProfileId AND p.Id =@id" ;
 
                     cmd.Parameters.AddWithValue("@userProfileId", userProfileId);
+                    cmd.Parameters.AddWithValue("@Id", id);
                     var reader = cmd.ExecuteReader();
 
                     Post post = null;
@@ -279,11 +280,10 @@ namespace TabloidMVC.Repositories
                     cmd.CommandText = @"
                         INSERT INTO PostTag
                             (PostId, TagId)
-                        OUTPUT INSERTED.ID
                         VALUES (@postId, @tagId)";
                     cmd.Parameters.AddWithValue("@postId", postTag.PostId);
                     cmd.Parameters.AddWithValue("@tagId", postTag.TagId);
-                    postTag.Id = (int)cmd.ExecuteNonQuery();
+                    cmd.ExecuteNonQuery();
                 }
             }
         }

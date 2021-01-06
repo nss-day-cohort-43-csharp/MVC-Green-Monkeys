@@ -157,19 +157,22 @@ namespace TabloidMVC.Controllers
             vm.TagOptions = _tagRepository.GetAllTags();
             vm.Post = _postRepository.GetUserPostById(id, GetCurrentUserProfileId());
 
-            //if (userId != post.UserProfileId)
+            if (vm.Post == null || vm.Post.UserProfileId != GetCurrentUserProfileId())
+            {
+                return NotFound();
+            }
             
-                return View(vm);                  
+             return View(vm);                  
         }
 
         //POST
         [HttpPost]
-        public IActionResult TagManagement(Post post, Tag tag)
+        public IActionResult TagManagement(PostTagViewModel vm)
         {
             var postTag = new PostTag()
             {
-                PostId = post.Id,
-                TagId = tag.Id
+                PostId = vm.Post.Id,
+                TagId = vm.SelectedTagId
             };
             _postRepository.AddPostTag(postTag);
             return RedirectToAction("Index");
