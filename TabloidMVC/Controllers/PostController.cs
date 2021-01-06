@@ -158,6 +158,10 @@ namespace TabloidMVC.Controllers
         public ActionResult Delete(int id)
         {
             Post post = _postRepository.GetPublishedPostById(id);
+            if(post == null)
+            {
+                return NotFound();
+            }
             return View(post);
         }
 

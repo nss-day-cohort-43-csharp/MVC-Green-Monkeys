@@ -33,7 +33,8 @@ namespace TabloidMVC.Repositories
                               LEFT JOIN Category c ON p.CategoryId = c.id
                               LEFT JOIN UserProfile u ON p.UserProfileId = u.id
                               LEFT JOIN UserType ut ON u.UserTypeId = ut.id
-                        WHERE IsApproved = 1 AND PublishDateTime < SYSDATETIME()";
+                        WHERE IsApproved = 1 AND PublishDateTime < SYSDATETIME()
+                        AND Active = 1";
                     var reader = cmd.ExecuteReader();
 
                     var posts = new List<Post>();
@@ -71,8 +72,8 @@ namespace TabloidMVC.Repositories
                               LEFT JOIN Category c ON p.CategoryId = c.id
                               LEFT JOIN UserProfile u ON p.UserProfileId = u.id
                               LEFT JOIN UserType ut ON u.UserTypeId = ut.id
-                       
                               AND p.id = @id";
+                         
 
                     cmd.Parameters.AddWithValue("@id", id);
                     var reader = cmd.ExecuteReader();
@@ -112,17 +113,13 @@ namespace TabloidMVC.Repositories
                               LEFT JOIN Category c ON p.CategoryId = c.id
                               LEFT JOIN UserProfile u ON p.UserProfileId = u.id
                               LEFT JOIN UserType ut ON u.UserTypeId = ut.id
-<<<<<<< HEAD
+
                         WHERE  p.UserProfileId = @userProfileId and p.Id = @id";
 
                     cmd.Parameters.AddWithValue("@userProfileId", userProfileId);
                     cmd.Parameters.AddWithValue("@id", id);
-=======
-                        WHERE  p.UserProfileId = @userProfileId AND p.Id =@id" ;
 
-                    cmd.Parameters.AddWithValue("@userProfileId", userProfileId);
-                    cmd.Parameters.AddWithValue("@Id", id);
->>>>>>> master
+
                     var reader = cmd.ExecuteReader();
 
                     Post post = null;
@@ -206,9 +203,10 @@ namespace TabloidMVC.Repositories
             using(SqlConnection conn = Connection)
             {
                 conn.Open();
-                using(SqlCommand cmd = conn.CreateCommand())
+                using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"DELETE FROM Post
+                    cmd.CommandText = @"UPDATE FROM Post
+                     SET Active = 0
                      WHERE Id = @id";
                     cmd.Parameters.AddWithValue("@id", postId);
 
