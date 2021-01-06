@@ -9,6 +9,8 @@ namespace TabloidMVC.Repositories
     public class CategoryRepository : BaseRepository, ICategoryRepository
     {
         public CategoryRepository(IConfiguration config) : base(config) { }
+
+        // List Category
         public List<Category> GetAll()
         {
             using (var conn = Connection)
@@ -16,7 +18,7 @@ namespace TabloidMVC.Repositories
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT id, name FROM Category ORDER BY name";
+                    cmd.CommandText = "SELECT id, name FROM Category WHERE Active = 1 ORDER BY name";
                     var reader = cmd.ExecuteReader();
 
                     var categories = new List<Category>();
@@ -30,6 +32,8 @@ namespace TabloidMVC.Repositories
                         });
                     }
 
+                    
+
                     reader.Close();
 
                     return categories;
@@ -37,7 +41,7 @@ namespace TabloidMVC.Repositories
             }
         }
 
-        // Get category by Id
+        // Get Category by Id
 
         public Category GetCategoryById(int id)
         {
@@ -49,7 +53,8 @@ namespace TabloidMVC.Repositories
                     cmd.CommandText = @"
                     SELECT Id, [Name]
                     FROM Category
-                    WHERE Id = @id";
+                    WHERE Id = @id 
+                    AND Active = 1";
 
                     cmd.Parameters.AddWithValue("@id", id);
 
@@ -76,7 +81,7 @@ namespace TabloidMVC.Repositories
             }
         }
 
-        // add a new category
+        // Add a new Category
         public void AddCategory(Category category)
         {
             using (SqlConnection conn = Connection)
@@ -99,9 +104,29 @@ namespace TabloidMVC.Repositories
             }
         }
 
-     
+        // Edit Category
 
-        //delete
+        public void UpdateCategory(Category category)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                    UPDATE Category
+                    SET
+                    [Name] = @name
+                    WHERE Id = @id";
+
+                    cmd.Parameters.AddWithValue("@name", category.Name);
+                    cmd.Parameters.AddWithValue("@id", category.Id);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        // Delete Category
 
         public void DeleteCategory(int categoryId)
         {
@@ -112,7 +137,8 @@ namespace TabloidMVC.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        DELETE FROM Category
+                        UPDATE Category
+                        SET Active = 0 
                         WHERE Id = @id";
                     cmd.Parameters.AddWithValue("@id", categoryId);
 
