@@ -1,4 +1,4 @@
-﻿@model TabloidMVC.Models.PostTag
+﻿@model TabloidMVC.Models.ViewModels.DeletePostTagViewModel
 
 @{
     ViewData["Title"] = "DeleteTag";
@@ -11,28 +11,24 @@
     <h4>PostTag</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Id)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PostId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PostId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TagId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TagId)
-        </dd>
+        <form asp-action="Delete">
+            <dt class="col-sm-2">
+                <select multiple="multiple" asp-for="selectedPostTags">
+                    @foreach (PostTag postTag in Model.postTags)
+                    {
+                        <option value="@postTag.Id">
+                            @postTag.Tag.Name
+                        </option>
+                    }
+                </select>
+            </dt>
+            <span asp-validation-for="selectedPostTags"></span>
+            <dd class="col-sm-10">
+                <div>
+                    <input type="submit" value="Delete" class="btn btn-danger" /> 
+                </div>
+                </dd>
+        </form>
+        <div><a asp-action="Index">Back to List</a></div>
     </dl>
-    
-    <form asp-action="DeleteTag">
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
 </div>

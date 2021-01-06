@@ -183,24 +183,27 @@ namespace TabloidMVC.Controllers
         }
         public ActionResult DeleteTag(int id)
         {
-            Tag tag = _tagRepository.GetTagById(id);
-            return View(tag);
+            List<PostTag> postTags = _postRepository.GetAllPostTagsByPostId(id);
+            List<int> selectedPostTags = new List<int>();
+            var vm = new DeletePostTagViewModel()
+            {
+                postTags = postTags,
+                selectedPostTags = new List<int>()
+            };
+        
+             
+            return View(vm);
         }
 
         // POST: TagController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteTag(int id, Tag tag)
+        public ActionResult DeleteTag(DeletePostTagViewModel vm, int id)
         {
-            try
-            {
                 _postRepository.RemovePostTag(id);
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return View(RedirectToAction("Index"));
+
+
         }
     }
 }

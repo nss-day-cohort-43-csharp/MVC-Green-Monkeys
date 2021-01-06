@@ -49,7 +49,12 @@
         <table class="table">
             <thead>
                 <tr>
-                    <h3> Tags </h3>
+                    <h3>
+                        Tags
+                        <a asp-controller="Post" asp-action="DeleteTag" asp-route-id="@Model.Id" class="btn btn-outline-primary mx-1" title="Manage Tags">
+                            Manage Tags
+                        </a>
+                    </h3>
                 </tr>
             </thead>
             @if (Model.TagNames == null)
@@ -64,9 +69,7 @@
                         <tr>
                             <td>
                                 @Html.DisplayFor(modelItem => postTag.Tag.Name)
-                                <a asp-controller="Post" asp-action="DeleteTag" asp-route-id="@Model.Id" class="btn btn-outline-primary mx-1" title="Manage Tags">
-                                    <i class="fas fa-ban"></i>
-                                </a>
+                               
                             </td>
                             <td>
                             </td>
