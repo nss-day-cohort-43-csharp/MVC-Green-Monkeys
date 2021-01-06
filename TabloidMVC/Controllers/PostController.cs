@@ -41,19 +41,22 @@ namespace TabloidMVC.Controllers
             return View(posts);
         }
 
+        
         public IActionResult Details(int id)
         {
-            var post = _postRepository.GetPublishedPostById(id);
-            if (post == null)
-            {
-
+            var post = new Post();
                 post = _postRepository.GetPublishedPostById(id);
+           
                 if (post == null)
                 {
                     return NotFound();
                 }
-            }
-            return View(post);
+                else
+                {
+                    post.TagNames = _postRepository.GetAllPostTagsByPostId(id);
+                    return View(post);
+                }
+            
         }
 
         public IActionResult Create()
@@ -177,6 +180,27 @@ namespace TabloidMVC.Controllers
             _postRepository.AddPostTag(postTag);
             return RedirectToAction("Index");
             
+        }
+        public ActionResult DeleteTag(int id)
+        {
+            Tag tag = _tagRepository.GetTagById(id);
+            return View(tag);
+        }
+
+        // POST: TagController/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteTag(int id, Tag tag)
+        {
+            try
+            {
+                _postRepository.RemovePostTag(id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
         }
     }
 }
