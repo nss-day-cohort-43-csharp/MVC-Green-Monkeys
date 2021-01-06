@@ -34,7 +34,7 @@ namespace TabloidMVC.Repositories
                               LEFT JOIN UserProfile u ON p.UserProfileId = u.id
                               LEFT JOIN UserType ut ON u.UserTypeId = ut.id
                         WHERE IsApproved = 1 AND PublishDateTime < SYSDATETIME()
-                        AND Active = 1";
+                        AND p.Active = 1";
                     var reader = cmd.ExecuteReader();
 
                     var posts = new List<Post>();
@@ -72,7 +72,7 @@ namespace TabloidMVC.Repositories
                               LEFT JOIN Category c ON p.CategoryId = c.id
                               LEFT JOIN UserProfile u ON p.UserProfileId = u.id
                               LEFT JOIN UserType ut ON u.UserTypeId = ut.id
-                              AND p.id = @id";
+                              WHERE p.id = @id and p.Active = 1";
                          
 
                     cmd.Parameters.AddWithValue("@id", id);
@@ -114,7 +114,7 @@ namespace TabloidMVC.Repositories
                               LEFT JOIN UserProfile u ON p.UserProfileId = u.id
                               LEFT JOIN UserType ut ON u.UserTypeId = ut.id
 
-                        WHERE  p.UserProfileId = @userProfileId and p.Id = @id";
+                        WHERE  p.UserProfileId = @userProfileId and p.Id = @id and p.Active = 1";
 
                     cmd.Parameters.AddWithValue("@userProfileId", userProfileId);
                     cmd.Parameters.AddWithValue("@id", id);
@@ -180,7 +180,7 @@ namespace TabloidMVC.Repositories
                                       content = @content,
                                       imageLocation = @imageLocation,
                                       publishDateTime = @publishDateTime,
-                                      isApproved = @isApproved,
+                                   
                                       categoryId = @categoryId
                                       where id = @id";
                     cmd.Parameters.AddWithValue("@id", post.Id);
@@ -188,7 +188,7 @@ namespace TabloidMVC.Repositories
                     cmd.Parameters.AddWithValue("@content", post.Content);
                     cmd.Parameters.AddWithValue("@imageLocation", DbUtils.ValueOrDBNull(post.ImageLocation));
                     cmd.Parameters.AddWithValue("@publishDateTime", DbUtils.ValueOrDBNull(post.PublishDateTime));
-                    cmd.Parameters.AddWithValue("@isApproved", post.IsApproved);
+              
                     cmd.Parameters.AddWithValue("@categoryId", post.CategoryId);
                    
 
@@ -205,7 +205,7 @@ namespace TabloidMVC.Repositories
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"UPDATE FROM Post
+                    cmd.CommandText = @"UPDATE Post
                      SET Active = 0
                      WHERE Id = @id";
                     cmd.Parameters.AddWithValue("@id", postId);
@@ -272,7 +272,7 @@ namespace TabloidMVC.Repositories
                               LEFT JOIN Category c ON p.CategoryId = c.id
                               LEFT JOIN UserProfile u ON p.UserProfileId = u.id
                               LEFT JOIN UserType ut ON u.UserTypeId = ut.id
-                        WHERE  p.UserProfileId = @userProfileId";
+                        WHERE  p.UserProfileId = @userProfileId and p.Active = 1";
 
 
                     cmd.Parameters.AddWithValue("@userProfileId", userProfileId);
