@@ -43,6 +43,7 @@ namespace TabloidMVC.Controllers
 
         public IActionResult Details(int id)
         {
+            int userId = GetCurrentUserProfileId();
             var post = _postRepository.GetPublishedPostById(id);
             if (post == null)
             {
@@ -52,8 +53,22 @@ namespace TabloidMVC.Controllers
                 {
                     return NotFound();
                 }
+                return NotFound();
             }
-            return View(post);
+            if (userId == post.UserProfileId)
+            {
+                return View(post);
+            }
+
+            if (post.IsApproved == true || post.PublishDateTime <= DateTime.Now)
+            {
+                return View(post);
+            }
+            else
+            {
+                return NotFound();
+            }
+
         }
 
         public IActionResult Create()
@@ -102,7 +117,7 @@ namespace TabloidMVC.Controllers
                 //populating the categories
                 CategoryOptions = categories
             };
-            //if post is null or if the user profile dosen't match then you can edit
+            //if post is null or if the user profile dosen't match then you can't edit
             if (post == null || post.UserProfileId != int.Parse(User.Claims.ElementAt(0).Value))
             {
                 return NotFound();
@@ -121,9 +136,10 @@ namespace TabloidMVC.Controllers
         {
             try
             {
-                int userId = GetCurrentUserProfileId();
+
                 _postRepository.update(post);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(MyPosts));
+
             }
             catch (Exception ex)
             {
@@ -139,7 +155,31 @@ namespace TabloidMVC.Controllers
             }
         }
 
+        public ActionResult Delete(int id)
+        {
+            Post post = _postRepository.GetPublishedPostById(id);
+            if(post == null)
+            {
+                return NotFound();
+            }
+            return View(post);
+        }
 
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int id, Post post)
+        {
+            try
+            {
+                _postRepository.Delete(id);
+                return RedirectToAction(nameof(MyPosts));
+            }
+            catch
+            {
+                return View();
+            }
+        }
 
         private int GetCurrentUserProfileId()
         {
