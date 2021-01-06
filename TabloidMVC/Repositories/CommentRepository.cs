@@ -133,7 +133,7 @@ namespace TabloidMVC.Repositories
                     cmd.Parameters.AddWithValue("@id", id);
                     SqlDataReader reader = cmd.ExecuteReader();
 
-                    
+
                     if (reader.Read())
                     {
                         Comment comment = new Comment
@@ -201,6 +201,25 @@ namespace TabloidMVC.Repositories
                     cmd.Parameters.AddWithValue("@subject", comment.Subject);
                     cmd.Parameters.AddWithValue("@content", comment.Content);
                     cmd.Parameters.AddWithValue("@id", comment.Id);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        public void DeleteComment(int commentId, Comment comment)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            DELETE FROM Comment
+                            WHERE Id = @id
+                        ";
+
+                    cmd.Parameters.AddWithValue("@id", commentId);
+
                     cmd.ExecuteNonQuery();
                 }
             }
