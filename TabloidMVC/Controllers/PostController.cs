@@ -244,8 +244,8 @@ namespace TabloidMVC.Controllers
             {
                  _postRepository.RemovePostTag(selectedPostTag);
             }
-           
-            return RedirectToAction("Index");
+            var thePost = _postRepository.GetPublishedPostById(id);
+            return RedirectToAction("Details", new { thePost.Id });
 
         }
 

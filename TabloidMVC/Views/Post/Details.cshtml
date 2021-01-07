@@ -47,6 +47,12 @@
         </section>
         <br />
         <table class="table">
+           @if (Model.TagNames == null)
+           {
+            <tbody></tbody>
+            }
+           else
+            {
             <thead>
                 <tr>
                     <h3>
@@ -57,12 +63,6 @@
                     </h3>
                 </tr>
             </thead>
-           @if (Model.TagNames == null)
-           {
-            <tbody></tbody>
-            }
-           else
-            {
                 <tbody>
                     @foreach (PostTag postTag in Model.TagNames)
                     {
