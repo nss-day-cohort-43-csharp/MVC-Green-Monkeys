@@ -57,8 +57,12 @@
                     </h3>
                 </tr>
             </thead>
-          
-            
+           @if (Model.TagNames == null)
+           {
+            <tbody></tbody>
+            }
+           else
+            {
                 <tbody>
                     @foreach (PostTag postTag in Model.TagNames)
                     {
@@ -71,7 +75,7 @@
                         </tr>
                     }
                 </tbody>
-       
+           }
 
         </table>
     </div>
