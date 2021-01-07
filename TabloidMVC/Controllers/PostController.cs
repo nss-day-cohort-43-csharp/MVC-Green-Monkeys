@@ -48,11 +48,7 @@ namespace TabloidMVC.Controllers
             var post = _postRepository.GetPublishedPostById(id);
             if (post == null)
             {
-                /*post = _postRepository.GetPublishedPostById(id);
-                if (post == null)
-                {
                     return NotFound();
-                }*/
             }
             if (userId == post.UserProfileId)
             {
@@ -62,6 +58,7 @@ namespace TabloidMVC.Controllers
           
             if (post.IsApproved == true || post.PublishDateTime <= DateTime.Now)
             {
+
                 return View(post);
             }
             else
