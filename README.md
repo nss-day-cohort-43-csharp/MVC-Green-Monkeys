@@ -36,8 +36,11 @@ Login as "lacey@gmail.com" to view all Author features
 
 ### Group Project Credits:
 **<td><a href="https://github.com/laceywalkerr">Lacey Walker</a></td>**
+
 **<td><a href="https://github.com/bdanielle092">Faith Magras</a></td>**
+
 **<td><a href="https://github.com/jenniferstarkey">Jennifer Starkey</a></td>**
+
 **<td><a href="https://github.com/Abdurehman05">Abdu Kassa</a></td>**
 
 ### Thank you for viewing Tabloid!
