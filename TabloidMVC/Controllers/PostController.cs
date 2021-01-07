@@ -154,12 +154,18 @@ namespace TabloidMVC.Controllers
 
         public ActionResult Delete(int id)
         {
+            int userId = GetCurrentUserProfileId();
             Post post = _postRepository.GetPublishedPostById(id);
-            if(post == null)
+            //if post is null or if the user profile dosen't match then you can't edit
+            if (post == null || post.UserProfileId != int.Parse(User.Claims.ElementAt(0).Value))
             {
                 return NotFound();
             }
-            return View(post);
+            else
+            {
+              
+                return View(post);
+            }
         }
 
         
