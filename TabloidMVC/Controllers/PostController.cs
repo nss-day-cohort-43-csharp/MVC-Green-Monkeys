@@ -190,20 +190,27 @@ namespace TabloidMVC.Controllers
                 postTags = postTags,
                 selectedPostTags = new List<int>()
             };
-        
-             
+
+            if (vm.Post == null || vm.Post.UserProfileId != GetCurrentUserProfileId())
+            {
+                return NotFound();
+            }
             return View(vm);
         }
 
         // POST: TagController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteTag(DeletePostTagViewModel vm, int id)
+        public ActionResult DeleteTag(int id, DeletePostTagViewModel vm)
         {
-                _postRepository.RemovePostTag(id);
-            return View(RedirectToAction("Index"));
-
+            foreach(int selectedPostTag in vm.selectedPostTags)
+            {
+                 _postRepository.RemovePostTag(selectedPostTag);
+            }
+           
+            return RedirectToAction("Index");
 
         }
+
     }
 }

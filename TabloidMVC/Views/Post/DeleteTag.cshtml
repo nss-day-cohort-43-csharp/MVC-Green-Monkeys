@@ -11,7 +11,7 @@
     <h4>PostTag</h4>
     <hr />
     <dl class="row">
-        <form asp-action="Delete">
+        <form asp-action="DeleteTag">
             <dt class="col-sm-2">
                 <select multiple="multiple" asp-for="selectedPostTags">
                     @foreach (PostTag postTag in Model.postTags)
