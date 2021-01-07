@@ -41,27 +41,24 @@ namespace TabloidMVC.Controllers
             return View(posts);
         }
 
+        
         public IActionResult Details(int id)
         {
             int userId = GetCurrentUserProfileId();
             var post = _postRepository.GetPublishedPostById(id);
             if (post == null)
             {
-
-                post = _postRepository.GetPublishedPostById(id);
-                if (post == null)
-                {
                     return NotFound();
-                }
-                return NotFound();
             }
             if (userId == post.UserProfileId)
             {
+                post.TagNames = _postRepository.GetAllPostTagsByPostId(id);
                 return View(post);
             }
-
+          
             if (post.IsApproved == true || post.PublishDateTime <= DateTime.Now)
             {
+
                 return View(post);
             }
             else
@@ -224,5 +221,35 @@ namespace TabloidMVC.Controllers
             return RedirectToAction("Index");
             
         }
+        public ActionResult DeleteTag(int id)
+        {
+            List<PostTag> postTags = _postRepository.GetAllPostTagsByPostId(id);
+            List<int> selectedPostTags = new List<int>();
+            var vm = new DeletePostTagViewModel()
+            {
+                Post = _postRepository.GetPublishedPostById(id),
+                postTags = postTags,
+                selectedPostTags = new List<int>()
+            };
+            
+
+            return View(vm);
+        }
+
+        // POST: TagController/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteTag(int id, DeletePostTagViewModel vm)
+        {
+            foreach(int selectedPostTag in vm.selectedPostTags)
+            {
+                 _postRepository.RemovePostTag(selectedPostTag);
+            }
+            var thePost = _postRepository.GetPublishedPostById(id);
+            return RedirectToAction("Details", new { thePost.Id });
+
+        }
+
     }
 }
+

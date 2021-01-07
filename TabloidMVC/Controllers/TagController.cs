@@ -43,15 +43,11 @@ namespace TabloidMVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Tag tag)
         {
-            try
-            {
+         
                 _tagRepository.AddTag(tag);
                 return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View(tag);
-            }
+            
+            
         }
 
         // GET: TagController/Edit/5
