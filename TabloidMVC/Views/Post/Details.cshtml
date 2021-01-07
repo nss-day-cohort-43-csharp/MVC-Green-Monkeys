@@ -45,5 +45,38 @@
         <section class="row post__content">
             <p class="col-sm-12 mt-5">@Html.DisplayFor(model => model.Content)</p>
         </section>
+        <br />
+        <table class="table">
+           @if (Model.TagNames == null)
+           {
+            <tbody></tbody>
+            }
+           else
+            {
+            <thead>
+                <tr>
+                    <h3>
+                        Tags
+                        <a asp-controller="Post" asp-action="DeleteTag" asp-route-id="@Model.Id" class="btn btn-outline-primary mx-1" title="Manage Tags">
+                            Manage Tags
+                        </a>
+                    </h3>
+                </tr>
+            </thead>
+                <tbody>
+                    @foreach (PostTag postTag in Model.TagNames)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => postTag.Tag.Name)
+                            </td>
+                            <td>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+           }
+
+        </table>
     </div>
 </div>
