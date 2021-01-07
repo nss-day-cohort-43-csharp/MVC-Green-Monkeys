@@ -72,11 +72,15 @@ namespace TabloidMVC.Controllers
         public ActionResult Edit(int id)
         {
             Comment comment = _commentRepo.GetCommentById(id);
-            if (comment == null)
+            if (GetCurrentUserId() == comment.UserProfileId)
             {
-                return NotFound();
+                return View(comment);
             }
-            return View(comment);
+            else
+            {
+                return RedirectToAction("Index", new { id });
+            }
+
         }
 
         // POST: CommentController/Edit/5
@@ -99,11 +103,15 @@ namespace TabloidMVC.Controllers
         public ActionResult Delete(int id)
         {
             Comment comment = _commentRepo.GetCommentById(id);
-            if (comment == null)
+            if (GetCurrentUserId() == comment.UserProfileId)
             {
-                return NotFound();
+                return View(comment);
             }
-            return View(comment);
+            else
+            {
+                return RedirectToAction("Index", new { id });
+            }
+
         }
 
         // POST: CommentController/Delete/5
@@ -113,12 +121,14 @@ namespace TabloidMVC.Controllers
         {
             try
             {
-                _commentRepo.DeleteComment(id, comment);
-                return RedirectToAction(nameof(Index));
+                Comment aid = _commentRepo.GetCommentById(id);
+                int aidId = aid.PostId;
+                _commentRepo.DeleteComment(id);
+                return RedirectToAction(nameof(Index), nameof(Comment), new { id = aidId });
             }
             catch
             {
-                return View();
+                return View(id);
             }
         }
 

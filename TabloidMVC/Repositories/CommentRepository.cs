@@ -205,7 +205,7 @@ namespace TabloidMVC.Repositories
                 }
             }
         }
-        public void DeleteComment(int commentId, Comment comment)
+        public void DeleteComment(int id)
         {
             using (SqlConnection conn = Connection)
             {
@@ -218,7 +218,7 @@ namespace TabloidMVC.Repositories
                             WHERE Id = @id
                         ";
 
-                    cmd.Parameters.AddWithValue("@id", commentId);
+                    cmd.Parameters.AddWithValue("@id", id);
 
                     cmd.ExecuteNonQuery();
                 }
