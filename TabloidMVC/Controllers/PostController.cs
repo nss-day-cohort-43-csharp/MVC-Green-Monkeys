@@ -227,6 +227,7 @@ namespace TabloidMVC.Controllers
             List<int> selectedPostTags = new List<int>();
             var vm = new DeletePostTagViewModel()
             {
+                Post = _postRepository.GetPublishedPostById(id),
                 postTags = postTags,
                 selectedPostTags = new List<int>()
             };

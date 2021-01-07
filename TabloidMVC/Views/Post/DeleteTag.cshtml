@@ -29,6 +29,8 @@
                 </div>
                 </dd>
         </form>
-        <div><a asp-action="Index">Back to List</a></div>
+        <div>
+        <a asp-controller="Post" asp-action="Details" asp-route-id="@Model.Post.Id">Back to Your Post</a>
+        </div>
     </dl>
 </div>
