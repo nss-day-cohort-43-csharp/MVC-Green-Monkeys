@@ -24,7 +24,7 @@ Tabloid MVC will have two types of users:
 
 ### Tabloid Home Page
 
-![TabloidHomePage](https://i.imgur.com/TwaVyDn.png| width=100)
+![TabloidHomePage](https://i.imgur.com/TwaVyDn.png | width=100)
 
 ### To Run App:
 Clone down git repo
