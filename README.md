@@ -27,12 +27,12 @@ Tabloid MVC will have two types of users:
 ![TabloidHomePage](https://i.imgur.com/TwaVyDn.png)
 
 ### To Run App:
-Clone down git repo
-Run code found in SQL folder
-Run code in Visual Studio Application
-Login as "admin@example.com" to view all Admin features
-Logout
-Login as "lacey@gmail.com" to view all Author features
+* Clone down git repo
+* Run code found in SQL folder
+* Run code in Visual Studio Application
+* Login as "admin@example.com" to view all Admin features
+* Logout
+* Login as "lacey@gmail.com" to view all Author features
 
 ### Group Project Credits:
 **<td><a href="https://github.com/laceywalkerr">Lacey Walker</a></td>**
