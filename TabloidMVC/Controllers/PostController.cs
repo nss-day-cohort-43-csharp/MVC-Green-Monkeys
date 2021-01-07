@@ -47,12 +47,6 @@ namespace TabloidMVC.Controllers
             var post = _postRepository.GetPublishedPostById(id);
             if (post == null)
             {
-
-                post = _postRepository.GetPublishedPostById(id);
-                if (post == null)
-                {
-                    return NotFound();
-                }
                 return NotFound();
             }
             if (userId == post.UserProfileId)
@@ -120,7 +114,7 @@ namespace TabloidMVC.Controllers
             //if post is null or if the user profile dosen't match then you can't edit
             if (post == null || post.UserProfileId != int.Parse(User.Claims.ElementAt(0).Value))
             {
-                return NotFound();
+                   return NotFound();
             }
             else
             {
