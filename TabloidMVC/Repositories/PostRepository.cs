@@ -33,7 +33,8 @@ namespace TabloidMVC.Repositories
                               LEFT JOIN Category c ON p.CategoryId = c.id
                               LEFT JOIN UserProfile u ON p.UserProfileId = u.id
                               LEFT JOIN UserType ut ON u.UserTypeId = ut.id
-                        WHERE IsApproved = 1 AND PublishDateTime < SYSDATETIME()";
+                        WHERE IsApproved = 1 AND PublishDateTime < SYSDATETIME()
+                        AND p.Active = 1";
                     var reader = cmd.ExecuteReader();
 
                     var posts = new List<Post>();
@@ -71,8 +72,8 @@ namespace TabloidMVC.Repositories
                               LEFT JOIN Category c ON p.CategoryId = c.id
                               LEFT JOIN UserProfile u ON p.UserProfileId = u.id
                               LEFT JOIN UserType ut ON u.UserTypeId = ut.id
-                        WHERE IsApproved = 1 AND PublishDateTime < SYSDATETIME()
-                              AND p.id = @id";
+                              WHERE p.id = @id and p.Active = 1";
+                         
 
                     cmd.Parameters.AddWithValue("@id", id);
                     var reader = cmd.ExecuteReader();
@@ -112,10 +113,13 @@ namespace TabloidMVC.Repositories
                               LEFT JOIN Category c ON p.CategoryId = c.id
                               LEFT JOIN UserProfile u ON p.UserProfileId = u.id
                               LEFT JOIN UserType ut ON u.UserTypeId = ut.id
-                        WHERE  p.UserProfileId = @userProfileId AND p.Id =@id" ;
+
+                        WHERE  p.UserProfileId = @userProfileId and p.Id = @id and p.Active = 1";
 
                     cmd.Parameters.AddWithValue("@userProfileId", userProfileId);
-                    cmd.Parameters.AddWithValue("@Id", id);
+                    cmd.Parameters.AddWithValue("@id", id);
+
+
                     var reader = cmd.ExecuteReader();
 
                     Post post = null;
@@ -172,26 +176,41 @@ namespace TabloidMVC.Repositories
                 {
                     cmd.CommandText = @"update post
                                       set
-                                      title  = @title
+                                      title  = @title,
                                       content = @content,
                                       imageLocation = @imageLocation,
-                                      createDateTime = @createDateTime,
                                       publishDateTime = @publishDateTime,
-                                      isApproved = @isApprove,
-                                      categoryId = @categorId,
-                                      userProfileId = @userProfileId
+                                   
+                                      categoryId = @categoryId
                                       where id = @id";
                     cmd.Parameters.AddWithValue("@id", post.Id);
                     cmd.Parameters.AddWithValue("@title", post.Title);
+                    cmd.Parameters.AddWithValue("@content", post.Content);
                     cmd.Parameters.AddWithValue("@imageLocation", DbUtils.ValueOrDBNull(post.ImageLocation));
-                    cmd.Parameters.AddWithValue("@creteDateTime", post.CreateDateTime);
-                    cmd.Parameters.AddWithValue("@pushlishDateTime", DbUtils.ValueOrDBNull(post.PublishDateTime));
-                    cmd.Parameters.AddWithValue("@isApproved", post.IsApproved);
+                    cmd.Parameters.AddWithValue("@publishDateTime", DbUtils.ValueOrDBNull(post.PublishDateTime));
+              
                     cmd.Parameters.AddWithValue("@categoryId", post.CategoryId);
-                    cmd.Parameters.AddWithValue("@userProfileId", post.UserProfileId);
+                   
 
                     cmd.ExecuteNonQuery();
 
+                }
+            }
+        }
+
+        public void Delete(int postId)
+        {
+            using(SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"UPDATE Post
+                     SET Active = 0
+                     WHERE Id = @id";
+                    cmd.Parameters.AddWithValue("@id", postId);
+
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
@@ -253,7 +272,7 @@ namespace TabloidMVC.Repositories
                               LEFT JOIN Category c ON p.CategoryId = c.id
                               LEFT JOIN UserProfile u ON p.UserProfileId = u.id
                               LEFT JOIN UserType ut ON u.UserTypeId = ut.id
-                        WHERE  p.UserProfileId = @userProfileId";
+                        WHERE  p.UserProfileId = @userProfileId and p.Active = 1";
 
 
                     cmd.Parameters.AddWithValue("@userProfileId", userProfileId);

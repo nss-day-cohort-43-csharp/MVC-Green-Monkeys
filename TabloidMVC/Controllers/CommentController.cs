@@ -30,14 +30,14 @@ namespace TabloidMVC.Controllers
 
         // GET: CommentController/Details/5
         public ActionResult Details(int id)
-        {       
+        {
             return View();
         }
 
         // GET: CommentController/Create
         public ActionResult Create(int id)
         {
-           
+
             Post post = _postRepo.GetPublishedPostById(id);
             CommentCreateViewModel vm = new CommentCreateViewModel()
             {
@@ -71,37 +71,49 @@ namespace TabloidMVC.Controllers
         // GET: CommentController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            Comment comment = _commentRepo.GetCommentById(id);
+            if (comment == null)
+            {
+                return NotFound();
+            }
+            return View(comment);
         }
 
         // POST: CommentController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Comment comment)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                _commentRepo.UpdateComment(comment, id);
+                return RedirectToAction(nameof(Index), new { id = comment.PostId });
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                return View(comment);
             }
         }
 
         // GET: CommentController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            Comment comment = _commentRepo.GetCommentById(id);
+            if (comment == null)
+            {
+                return NotFound();
+            }
+            return View(comment);
         }
 
         // POST: CommentController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Comment comment)
         {
             try
             {
+                _commentRepo.DeleteComment(id, comment);
                 return RedirectToAction(nameof(Index));
             }
             catch
